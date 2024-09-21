@@ -1,0 +1,18 @@
+{
+	"name": "Team 20 Scouting",
+	"short_name": "Scouting",
+	"description": "Team 20's scouting app",
+	"start_url": "/top-secret-project/",
+	"icons": [
+		{
+			"src": "./light.svg",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any"
+		}
+	],
+	"scope": "/top-secret-project/",
+	"display": "standalone",
+	"theme_color": "#019D04",
+	"background_color": "#019D04"
+}
