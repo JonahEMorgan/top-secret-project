@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html x-data="{dark: true}" :data-theme="dark ? 'dark' : 'light'">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Team 20 Scouting</title>
+		<link rel="icon" href="light.svg">
+		<link rel="preload" href="alpine.js" as="script">
+		<link rel="preload" href="main.js" as="script">
+		<link rel="stylesheet" href="pico.css">
+		<style>
+			.off {
+				background: var(--pico-form-element-background-color);
+				border-color: var(--pico-form-element-border-color);
+			}
+			.red {
+				background: red;
+				border: red;
+			}
+			.wide {
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body class="container-fluid" x-data="{tab: 1}">
+		<nav class="grid">
+		    <button @click="tab = 1">General</button>
+		    <button @click="tab = 2">Auto</button>
+		    <button @click="tab = 3">Teleop</button>
+		    <button @click="tab = 4">End</button>
+		    <button @click="tab = 5">Qr</button>
+		    <button @click="tab = 6">Data</button>
+		</nav>
+		<br>
+		<div class="container" x-show="tab == 1">
+			<form>
+				<label>
+			      Name:
+			      <input autocomplete="name">
+			    </label>
+			    <label>
+			      Match Type:
+			      <select>
+			      	<option value="practice">Practice</option>
+			      	<option value="qualifications">Qualifications</option>
+			      	<option value="playoffs">Playoffs</option>
+			      </select>
+			    </label>
+			    <label>
+			      Match Number:
+			      <input type="number">
+			    </label>
+			    <label>
+			      Replay?
+			      <input type="checkbox">
+			    </label>
+			    <label>
+			      Alliance:
+			      <select>
+			      	<option value="red">Red</option>
+			      	<option value="blue">Blue</option>
+			      </select>
+			    </label>
+			    <label>
+			      Starting Position:
+			      <select>
+			      	<option value="1">1</option>
+			      	<option value="2">2</option>
+			      	<option value="3">3</option>
+			      	<option value="4">4</option>
+			      	<option value="5">5</option>
+			      </select>
+			    </label>
+			    <label>
+			      Team Number:
+			      <input type="number">
+			    </label>
+			</form>
+			<img width="300" :src="dark ? 'dark.svg' : 'light.svg'">
+			<br>
+			<button @click="dark = !dark">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" width="50">
+		  			<path x-show="dark" stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+		  			<path x-show="!dark" stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+				</svg>
+			</button>
+			<button>
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" width="50">
+				  <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+				</svg>
+			</button>
+		</div>
+		<div class="container grid" x-show="tab == 2">
+			<div>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Auto Speaker Notes</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+				<br>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Auto Speaker Miss</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+				<br>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Auto Centerline Notes</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+			</div>
+			<div>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Auto AMP Notes</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+				<br>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Auto AMP Miss</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+				<br>
+				<button x-data="{leave: false}" @click="leave = !leave" :class="{'red': !leave}" class="wide">
+					<h3>Leave</h3>
+					<h1 x-text="leave ? 'Yes' : 'No'"></h1>
+				</button>
+			</div>
+		</div>
+		<div class="container grid" x-show="tab == 3">
+			<div>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Teleop Speaker Notes</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+				<br>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Teleop Speaker Miss</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+				<br>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Teleop Passed Notes</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+			</div>
+			<div>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Teleop AMP Notes</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+				<br>
+				<div class="grid" x-data="{count: 0}">
+					<button @click="count--">-</button>
+					<div align="center">
+						<h3>Teleop AMP Miss</h3>
+						<h1 x-text="count"></h1>
+					</div>
+					<button @click="count++">+</button>
+				</div>
+				<br>
+				<div class="grid">
+					<div class="grid" x-data="{count: 0}">
+						<button @click="count--">-</button>
+						<div align="center">
+							<h3>Fouls</h3>
+							<h1 x-text="count"></h1>
+						</div>
+						<button @click="count++">+</button>
+					</div>
+					<div class="grid" x-data="{count: 0}">
+						<button @click="count--">-</button>
+						<div align="center">
+							<h3>Techs</h3>
+							<h1 x-text="count"></h1>
+						</div>
+						<button @click="count++">+</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container grid" x-show="tab == 4">
+			<form>
+				<div class="grid">
+					<button x-data="{trap: false}" @click="trap = !trap" :class="{'off': !trap}" class="wide">
+						<h4>Trap Attempted</h4>
+						<h1 x-text="trap ? 'Yes' : 'No'"></h1>
+					</button>
+					<div class="grid" x-data="{count: 0}">
+						<button @click="count--">-</button>
+						<div align="center">
+							<h4>Notes Trap</h4>
+							<h1 x-text="count"></h1>
+						</div>
+						<button @click="count++">+</button>
+					</div>
+				</div>
+				<br>
+				<div class="grid" x-data="{climb: 0}">
+					<button @click="climb = [1,0,0][climb]" :class="{'off': climb == 0}" class="wide">
+						<h4>Climb Attempted</h4>
+						<h1 x-text="climb ? 'Yes' : 'No'"></h1>
+					</button>
+					<button @click="climb = [2,2,1][climb]" :class="{'off': climb < 2}" class="wide">
+						<h4>Climb Attempted</h4>
+						<h1 x-text="climb == 2 ? 'Yes' : 'No'"></h1>
+					</button>
+					<label>
+				      Harmony?
+				      <select>
+				      	<option value="0">0</option>
+				      	<option value="2">2</option>
+				      	<option value="3">3</option>
+				      </select>
+				    </label>
+				</div>
+				<br>
+				<div class="grid">
+					<button x-data="{park: false}" @click="park = !park" :class="{'off': !park}" class="wide">
+						<h4>Park</h4>
+						<h1 x-text="park ? 'Yes' : 'No'"></h1>
+					</button>
+					<button x-data="{breakdown: false}" @click="breakdown = !breakdown" :class="{'red': breakdown}" class="wide">
+						<h4>Breakdown</h4>
+						<h1 x-text="breakdown ? 'Yes' : 'No'"></h1>
+					</button>
+				</div>
+				<br>
+				<div class="grid">
+					<label>
+				      Defense Faced
+				      <select>
+				      	<option value="none">None</option>
+				      	<option value="poor">Poor</option>
+				      	<option value="passable">Passable</option>
+				      	<option value="good">Good</option>
+				      	<option value="excellent">Excellent</option>
+				      </select>
+				    </label>
+				    <label>
+				      Defense Played
+				      <select>
+				      	<option value="none">None</option>
+				      	<option value="poor">Poor</option>
+				      	<option value="passable">Passable</option>
+				      	<option value="good">Good</option>
+				      	<option value="excellent">Excellent</option>
+				      </select>
+				    </label>
+				</div>
+			</form>
+			<div>
+				<p>Comments?</p>
+				<textarea></textarea>
+			</div>
+		</div>
+		<div x-show="tab == 5">
+			tab 5
+		</div>
+		<div x-show="tab == 6">
+			tab 6
+		</div>
+		<script src="alpine.js"></script>
+		<script src="main.js"></script>
+	</body>
+</html>
