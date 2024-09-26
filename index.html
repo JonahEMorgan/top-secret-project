@@ -24,9 +24,13 @@
 				width: 100%;
 			}
 			.bottom {
-				position: absolute;
+				position: fixed;
 				bottom: 0;
 				left: 0;
+			}
+			.code {
+				display: inline-block;
+				margin-right: 1em;
 			}
 		</style>
 	</head>
@@ -41,53 +45,51 @@
 		</nav>
 		<br>
 		<div class="container" x-show="$store.current.tab == 1">
-			<form>
-				<label>
-			      Name:
-			      <input x-model="$store.current.matchInfo.name">
-			    </label>
-			    <label>
-			      Match Type:
-			      <select x-model="$store.current.matchInfo.matchType">
-			      	<option value="0">Practice</option>
-			      	<option value="1">Qualifications</option>
-			      	<option value="2">Playoffs</option>
-			      </select>
-			    </label>
-			    <label>
-			      Match Number:
-			      <input x-model="$store.current.matchInfo.matchNum" type="number">
-			    </label>
-			    <label>
-			      Replay?
-			      <input x-model="$store.current.matchInfo.isReplay" type="checkbox">
-			    </label>
-			    <label>
-			      Alliance:
-			      <select x-model="$store.current.matchInfo.alliance">
-			      	<option value="R">Red</option>
-			      	<option value="B">Blue</option>
-			      </select>
-			    </label>
-			    <label>
-			      Starting Position:
-			      <select x-model="$store.current.matchInfo.startingPosition">
-			      	<option value="1">1</option>
-			      	<option value="2">2</option>
-			      	<option value="3">3</option>
-			      	<option value="4">4</option>
-			      	<option value="5">5</option>
-			      </select>
-			    </label>
-			    <label>
-			      Team Number:
-			      <input x-model="$store.current.matchInfo.teamNum" type="number">
-			    </label>
-			</form>
+			<label>
+		      Name:
+		      <input x-model="$store.current.matchInfo.name">
+		    </label>
+		    <label>
+		      Match Type:
+		      <select x-model="$store.current.matchInfo.matchType">
+		      	<option value="0">Practice</option>
+		      	<option value="1">Qualifications</option>
+		      	<option value="2">Playoffs</option>
+		      </select>
+		    </label>
+		    <label>
+		      Match Number:
+		      <input x-model="$store.current.matchInfo.matchNum" type="number">
+		    </label>
+		    <label>
+		      Replay?
+		      <input x-model="$store.current.matchInfo.isReplay" type="checkbox">
+		    </label>
+		    <label>
+		      Alliance:
+		      <select x-model="$store.current.matchInfo.alliance">
+		      	<option value="R">Red</option>
+		      	<option value="B">Blue</option>
+		      </select>
+		    </label>
+		    <label>
+		      Starting Position:
+		      <select x-model="$store.current.matchInfo.startingPosition">
+		      	<option value="1">1</option>
+		      	<option value="2">2</option>
+		      	<option value="3">3</option>
+		      	<option value="4">4</option>
+		      	<option value="5">5</option>
+		      </select>
+		    </label>
+		    <label>
+		      Team Number:
+		      <input x-model="$store.current.matchInfo.teamNum" type="number">
+		    </label>
 			<img alt="logo" width="300" height="300" :src="dark ? 'dark.svg' : 'light.svg'">
 			<br>
 			<button aria-label="change theme" @click="dark = !dark">
-				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" width="50">
+				<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" width="50">
 		  			<path x-show="dark" stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
 		  			<path x-show="!dark" stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
 				</svg>
@@ -100,51 +102,16 @@
 		</div>
 		<div class="container grid" x-show="$store.current.tab == 2">
 			<div>
-				<div class="grid">
-					<button @click="$store.current.autoInfo.speakerCounter--">-</button>
-					<div align="center">
-						<h3>Auto Speaker Notes</h3>
-						<h1 x-text="$store.current.autoInfo.speakerCounter"></h1>
-					</div>
-					<button @click="$store.current.autoInfo.speakerCounter++">+</button>
-				</div>
+				<div x-data="counter('autoInfo.speakerCounter', 'Auto Speaker Notes')"></div>
 				<br>
-				<div class="grid">
-					<button @click="$store.current.autoInfo.speakerMissCounter--">-</button>
-					<div align="center">
-						<h3>Auto Speaker Miss</h3>
-						<h1 x-text="$store.current.autoInfo.speakerMissCounter"></h1>
-					</div>
-					<button @click="$store.current.autoInfo.speakerMissCounter++">+</button>
-				</div>
+				<div x-data="counter('autoInfo.speakerMissCounter', 'Auto Speaker Miss')"></div>
 				<br>
-				<div class="grid">
-					<button @click="$store.current.autoInfo.centerlineNotesCounter--">-</button>
-					<div align="center">
-						<h3>Auto Centerline Notes</h3>
-						<h1 x-text="$store.current.autoInfo.centerlineNotesCounter"></h1>
-					</div>
-					<button @click="$store.current.autoInfo.centerlineNotesCounter++">+</button>
-				</div>
+				<div x-data="counter('autoInfo.centerlineNotesCounter', 'Auto Centerline Notes')"></div>
 			</div>
 			<div>
-				<div class="grid">
-					<button @click="$store.current.autoInfo.ampCounter--">-</button>
-					<div align="center">
-						<h3>Auto AMP Notes</h3>
-						<h1 x-text="$store.current.autoInfo.ampCounter"></h1>
-					</div>
-					<button @click="$store.current.autoInfo.ampCounter++">+</button>
-				</div>
+				<div x-data="counter('autoInfo.ampCounter', 'Auto AMP Notes')"></div>
 				<br>
-				<div class="grid">
-					<button @click="$store.current.autoInfo.ampMissCounter--">-</button>
-					<div align="center">
-						<h3>Auto AMP Miss</h3>
-						<h1 x-text="$store.current.autoInfo.ampMissCounter"></h1>
-					</div>
-					<button @click="$store.current.autoInfo.ampMissCounter++">+</button>
-				</div>
+				<div x-data="counter('autoInfo.ampMissCounter', 'Auto AMP Miss')"></div>
 				<br>
 				<button @click="$store.current.autoInfo.toggleLeft = 1 - $store.current.autoInfo.toggleLeft" :class="{'red': !$store.current.autoInfo.toggleLeft}" class="wide">
 					<h3>Leave</h3>
@@ -154,87 +121,31 @@
 		</div>
 		<div class="container grid" x-show="$store.current.tab == 3">
 			<div>
-				<div class="grid">
-					<button @click="$store.current.teleopInfo.speakerCounter--">-</button>
-					<div align="center">
-						<h3>Teleop Speaker Notes</h3>
-						<h1 x-text="$store.current.teleopInfo.speakerCounter"></h1>
-					</div>
-					<button @click="$store.current.teleopInfo.speakerCounter++">+</button>
-				</div>
+				<div x-data="counter('teleopInfo.speakerCounter', 'Teleop Speaker Notes')"></div>
 				<br>
-				<div class="grid">
-					<button @click="$store.current.teleopInfo.speakerMissCounter--">-</button>
-					<div align="center">
-						<h3>Teleop Speaker Miss</h3>
-						<h1 x-text="$store.current.teleopInfo.speakerMissCounter"></h1>
-					</div>
-					<button @click="$store.current.teleopInfo.speakerMissCounter++">+</button>
-				</div>
+				<div x-data="counter('teleopInfo.speakerMissCounter', 'Teleop Speaker Miss')"></div>
 				<br>
-				<div class="grid">
-					<button @click="$store.current.teleopInfo.notesPassedCounter--">-</button>
-					<div align="center">
-						<h3>Teleop Passed Notes</h3>
-						<h1 x-text="$store.current.teleopInfo.notesPassedCounter"></h1>
-					</div>
-					<button @click="$store.current.teleopInfo.notesPassedCounter++">+</button>
-				</div>
+				<div x-data="counter('teleopInfo.notesPassedCounter', 'Teleop Passed Notes')"></div>
 			</div>
 			<div>
-				<div class="grid">
-					<button @click="$store.current.teleopInfo.ampCounter--">-</button>
-					<div align="center">
-						<h3>Teleop AMP Notes</h3>
-						<h1 x-text="$store.current.teleopInfo.ampCounter"></h1>
-					</div>
-					<button @click="$store.current.teleopInfo.ampCounter++">+</button>
-				</div>
+				<div x-data="counter('teleopInfo.ampCounter', 'Teleop AMP Notes')"></div>
+				<br>
+				<div x-data="counter('teleopInfo.ampMissCounter', 'Teleop AMP Miss')"></div>
 				<br>
 				<div class="grid">
-					<button @click="$store.current.teleopInfo.ampMissCounter--">-</button>
-					<div align="center">
-						<h3>Teleop AMP Miss</h3>
-						<h1 x-text="$store.current.teleopInfo.ampMissCounter"></h1>
-					</div>
-					<button @click="$store.current.teleopInfo.ampMissCounter++">+</button>
-				</div>
-				<br>
-				<div class="grid">
-					<div class="grid">
-						<button @click="$store.current.teleopInfo.foulCounter--">-</button>
-						<div align="center">
-							<h3>Fouls</h3>
-							<h1 x-text="$store.current.teleopInfo.foulCounter"></h1>
-						</div>
-						<button @click="$store.current.teleopInfo.foulCounter++">+</button>
-					</div>
-					<div class="grid">
-						<button @click="$store.current.teleopInfo.techCounter--">-</button>
-						<div align="center">
-							<h3>Techs</h3>
-							<h1 x-text="$store.current.teleopInfo.techCounter"></h1>
-						</div>
-						<button @click="$store.current.teleopInfo.techCounter++">+</button>
-					</div>
+					<div x-data="counter('teleopInfo.foulCounter', 'Fouls')"></div>
+					<div x-data="counter('teleopInfo.techCounter', 'Techs')"></div>
 				</div>
 			</div>
 		</div>
 		<div class="container grid" x-show="$store.current.tab == 4">
-			<form>
+			<div>
 				<div class="grid">
 					<button @click="$store.current.endInfo.trapAttempted = 1 - $store.current.endInfo.trapAttempted" :class="{'off': !$store.current.endInfo.trapAttempted}" class="wide">
 						<h4>Trap Attempted</h4>
 						<h1 x-text="$store.current.endInfo.trapAttempted ? 'Yes' : 'No'"></h1>
 					</button>
-					<div class="grid">
-						<button @click="$store.current.endInfo.trapResult--">-</button>
-						<div align="center">
-							<h4>Notes Trap</h4>
-							<h1 x-text="$store.current.endInfo.trapResult"></h1>
-						</div>
-						<button @click="$store.current.endInfo.trapResult++">+</button>
-					</div>
+					<div x-data="counter('endInfo.trapResult', 'Notes Trap')"></div>
 				</div>
 				<br>
 				<div class="grid">
@@ -289,7 +200,7 @@
 				      </select>
 				    </label>
 				</div>
-			</form>
+			</div>
 			<div>
 				<p>Comments?</p>
 				<textarea x-model="$store.current.endInfo.comments"></textarea>
@@ -308,14 +219,19 @@
 				</label>
 			</div>
 		</div>
-		<div class="container" x-data="dataScreen()" x-show="$store.current.tab == 6">
-			<div class="grid">
+		<div x-data="dataScreen()" x-show="$store.current.tab == 6">
+			<div class="container grid">
 				<button @click="display">Display QR Codes</button>
 				<a role="button" @click="download" :href="url" download="scoutingData.txt">Download Data</a>
 				<button @click="clear" class="red">Clear Data</button>
 			</div>
 			<br>
-			<div class="grid" x-html="images"></div>
+			<template x-for="image of images">
+				<div class="code">
+                 	<div x-html="image.html"></div>
+                 	<h1 x-text="image.label"></h1>
+                </div>
+            </template>
 		</div>
 		<h1 class="bottom" x-text="$store.current.matchInfo.teamNum"></h1>
 		<script src="main.js"></script>

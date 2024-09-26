@@ -42,8 +42,6 @@ var config = `{
 
 var matchTypes = ["PRAC","QUAL","PLAY"];
 
-var store = () => Alpine.store("current", JSON.parse(config));
-
 var range = (a, b) => [...Array(b).keys()].slice(a);
 
 var prime = n => range(2, n).reduce((b, v) => n % v != 0 && b,true);
@@ -52,9 +50,23 @@ var primes = range(2, 98).filter(prime);
 
 var hash = string => [...[...string].entries()].reduce((s, [i, v]) => s + v.charCodeAt() * primes[i % primes.length],0);
 
-var storage = callback => range(0,localStorage.length).forEach(n => callback(localStorage.key(n)));
+var storage = callback => range(0, localStorage.length).forEach(n => callback(localStorage.key(n)));
 
-document.addEventListener("alpine:init",store);
+document.addEventListener("alpine:init",() => Alpine.store("current", JSON.parse(config)));
+
+var counter = (property, label) => ({
+    init(){
+        this.$el.classList.add("grid");
+        this.$el.innerHTML =
+            `<button @click="if($store.current.${property} > 0) $store.current.${property}--">-</button>
+                 <div align="center">
+                     <h4>${label}</h4>
+                     <h1 x-text="$store.current.${property}"></h1>
+                 </div>
+             <button @click="$store.current.${property}++">+</button>
+        `;
+    }
+});
 
 var endScreen = () => ({
     image: null,
@@ -63,65 +75,64 @@ var endScreen = () => ({
     filename: null,
     continueScouting: false,
     display(){
-        var current = Alpine.store("current");
-        if(current.matchInfo.name == null) {
+        if(this.$store.current.matchInfo.name == null) {
             alert("Please enter name!");
             return;
         }
-        if(current.matchInfo.matchNum == null) {
+        if(this.$store.current.matchInfo.matchNum == null) {
             alert("Please enter match number!");
             return;
         }
-        if(current.matchInfo.teamNum == null) {
+        if(this.$store.current.matchInfo.teamNum == null) {
             alert("Please enter team number!");
             return;
         }
         this.matchLabel = [
-            matchTypes[current.matchInfo.matchType],
-            current.matchInfo.matchNum
+            matchTypes[this.$store.current.matchInfo.matchType],
+            this.$store.current.matchInfo.matchNum
         ].join("_");
         var name = [
-            current.matchInfo.alliance,
-            current.matchInfo.startingPosition,
-            matchTypes[current.matchInfo.matchType],
-            current.matchInfo.isReplay ? "replay" : "",
+            this.$store.current.matchInfo.alliance,
+            this.$store.current.matchInfo.startingPosition,
+            matchTypes[this.$store.current.matchInfo.matchType],
+            this.$store.current.matchInfo.isReplay ? "replay" : "",
             "ScoutingData",
-            current.matchInfo.matchNum
+            this.$store.current.matchInfo.matchNum
         ].join("");
         var data = [
-            current.matchInfo.name,
-            current.matchInfo.matchType,
-            current.matchInfo.matchNum,
-           +current.matchInfo.isReplay,
-            current.matchInfo.alliance,
-            current.matchInfo.teamNum,
-            current.matchInfo.startingPosition,
+            this.$store.current.matchInfo.name,
+            this.$store.current.matchInfo.matchType,
+            this.$store.current.matchInfo.matchNum,
+           +this.$store.current.matchInfo.isReplay,
+            this.$store.current.matchInfo.alliance,
+            this.$store.current.matchInfo.teamNum,
+            this.$store.current.matchInfo.startingPosition,
 
-            current.autoInfo.speakerCounter,
-            current.autoInfo.speakerMissCounter,
-            current.autoInfo.ampCounter,
-            current.autoInfo.ampMissCounter,
-            current.autoInfo.centerlineNotesCounter,
-            current.autoInfo.toggleLeft,
+            this.$store.current.autoInfo.speakerCounter,
+            this.$store.current.autoInfo.speakerMissCounter,
+            this.$store.current.autoInfo.ampCounter,
+            this.$store.current.autoInfo.ampMissCounter,
+            this.$store.current.autoInfo.centerlineNotesCounter,
+            this.$store.current.autoInfo.toggleLeft,
 
-            current.teleopInfo.speakerCounter,
-            current.teleopInfo.speakerMissCounter,
-            current.teleopInfo.ampCounter,
-            current.teleopInfo.ampMissCounter,
-            current.teleopInfo.notesPassedCounter,
-            current.teleopInfo.foulCounter,
-            current.teleopInfo.techCounter,
+            this.$store.current.teleopInfo.speakerCounter,
+            this.$store.current.teleopInfo.speakerMissCounter,
+            this.$store.current.teleopInfo.ampCounter,
+            this.$store.current.teleopInfo.ampMissCounter,
+            this.$store.current.teleopInfo.notesPassedCounter,
+            this.$store.current.teleopInfo.foulCounter,
+            this.$store.current.teleopInfo.techCounter,
 
-            current.endInfo.trapAttempted,
-            current.endInfo.trapResult,
-            current.endInfo.climbAttempted,
-            current.endInfo.climbResult,
-            current.endInfo.park,
-            current.endInfo.harmony,
-            current.endInfo.breakdown,
-            current.endInfo.defensePlayed,
-            current.endInfo.defenseFaced,
-            current.endInfo.comments,
+            this.$store.current.endInfo.trapAttempted,
+            this.$store.current.endInfo.trapResult,
+            this.$store.current.endInfo.climbAttempted,
+            this.$store.current.endInfo.climbResult,
+            this.$store.current.endInfo.park,
+            this.$store.current.endInfo.harmony,
+            this.$store.current.endInfo.breakdown,
+            this.$store.current.endInfo.defensePlayed,
+            this.$store.current.endInfo.defenseFaced,
+            this.$store.current.endInfo.comments,
 
             Date.now()
         ].join("\t");
@@ -134,30 +145,29 @@ var endScreen = () => ({
         localStorage.setItem(name, data);
     },
     restart(){
-        var name = Alpine.store("current").matchInfo.name;
-        store();
+        var store = JSON.parse(config);
         if(this.continueScouting){
             this.continueScouting = false;
-            Alpine.store("current").matchInfo.name = name;
+            store.matchInfo.name = this.$store.current.matchInfo.name;
         }
+        this.$store.current = store;
     }
 });
 
 var dataScreen = () => ({
     url: null,
-    images: null,
+    images: [],
     display(){
-        this.images = "";
+        this.images = [];
         storage(key => {
             var data = localStorage.getItem(key);
             var code = qrcode(0,"H");
             code.addData(data);
             code.make();
-            this.images +=
-                `<div>
-                     ${code.createSvgTag(8)}
-                     <h1>Match ${data.split("\t")[2]}</h1>
-                 </div>`;
+            this.images.push({
+                html: code.createSvgTag(8),
+                label: "Match " + data.split("\t")[2],
+            });
         });
     },
     download(){
