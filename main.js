@@ -52,17 +52,41 @@ var hash = string => [...[...string].entries()].reduce((s, [i, v]) => s + v.char
 
 var storage = callback => range(0, localStorage.length).forEach(n => callback(localStorage.key(n)));
 
-document.addEventListener("alpine:init",() => Alpine.store("current", JSON.parse(config)));
+document.addEventListener("alpine:init",() => {
+    Alpine.store("current", JSON.parse(config));
+    Alpine.bind("tab", (id) => ({
+        "@click"(){
+            this.$store.current.tab = id;
+        },
+        ":class"(){
+            return (this.$store.current.tab == id) ? "active" : "";
+        }
+    }));
+    Alpine.bind("toggle", (property, on, off) => ({
+        "x-data": `toggle('${property}')`,
+        "@click": `$store.current.${property} = 1 - $store.current.${property}`,
+        ":class": `$store.current.${property} ? '${on}' : '${off}'`
+    }));
+});
 
-var counter = (property, label) => ({
+var toggle = property => ({
     init(){
-        this.$el.classList.add("grid");
+        this.$el.classList.add("toggle");
+        this.$el.innerHTML =
+            `<h4>${this.$el.textContent}</h4>
+             <h1 x-text="$store.current.${property} ? 'Yes' : 'No'"></h1>`;
+    }
+});
+
+var counter = property => ({
+    init(){
+        this.$el.classList.add("counter");
         this.$el.innerHTML =
             `<button @click="if($store.current.${property} > 0) $store.current.${property}--">-</button>
-                 <div align="center">
-                     <h4>${label}</h4>
-                     <h1 x-text="$store.current.${property}"></h1>
-                 </div>
+             <div>
+                 <h4>${this.$el.textContent}</h4>
+                 <h1 x-text="$store.current.${property}"></h1>
+             </div>
              <button @click="$store.current.${property}++">+</button>
         `;
     }
@@ -139,9 +163,11 @@ var endScreen = () => ({
         var code = qrcode(0,"H");
         code.addData(data);
         code.make();
-        this.image = code.createSvgTag(10);
-        this.url = "data:text/plain;base64,"+btoa(data);
-        this.filename = name + ".txt";
+        this.image = code.createDataURL(10);
+        var link = document.createElement("a");
+        link.href = "data:text/plain;base64,"+btoa(data);
+        link.download = name + ".txt";
+        link.click();
         localStorage.setItem(name, data);
     },
     restart(){
@@ -165,7 +191,7 @@ var dataScreen = () => ({
             code.addData(data);
             code.make();
             this.images.push({
-                html: code.createSvgTag(8),
+                src: code.createDataURL(8),
                 label: "Match " + data.split("\t")[2],
             });
         });
@@ -173,7 +199,10 @@ var dataScreen = () => ({
     download(){
         var text = [];
         storage(key => text.push(localStorage.getItem(key)));
-        this.url = "data:text/plain;base64,"+btoa(text.join("\n"));
+        var link = document.createElement("a");
+        link.href = "data:text/plain;base64,"+btoa(text.join("\n"));
+        link.download = "scoutingData.txt";
+        link.click();
     },
     clear(){
         var password = prompt("𝗪𝗶𝗽𝗲 𝗦𝗰𝗼𝘂𝘁𝗶𝗻𝗴 𝗗𝗮𝘁𝗮\nYou are about to wipe device's scouting data. Are you sure you want to clear scouting data?");
